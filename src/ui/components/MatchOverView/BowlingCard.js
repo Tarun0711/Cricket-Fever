@@ -40,12 +40,12 @@ const BowlingCard = () => {
   return (
     <View style={styles.container}>
       <View style={styles.tableHeader}>
-        <Text style={[styles.cell, { flex: 3 }]}>Bowling</Text>
-        <Text style={styles.cell}>O</Text>
-        <Text style={styles.cell}>M</Text>
-        <Text style={styles.cell}>R</Text>
-        <Text style={styles.cell}>W</Text>
-        <Text style={styles.cell}>Econ</Text>
+        <Text style={[styles.headerCell, { flex: 3 }]}>Bowling</Text>
+        <Text style={styles.headerCell}>O</Text>
+        <Text style={styles.headerCell}>M</Text>
+        <Text style={styles.headerCell}>R</Text>
+        <Text style={styles.headerCell}>W</Text>
+        <Text style={styles.headerCell}>Econ</Text>
       </View>
 
       {bowlingData.map((item, index) => (
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#eee',
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom: 8,
   },
   row: {
@@ -87,6 +87,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#333',
+  },
+  headerCell: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
   },
   playerName: {
     fontWeight: '600',

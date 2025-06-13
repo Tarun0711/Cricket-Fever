@@ -31,8 +31,8 @@ const MatchCard = ({ match }) => {
 
 const styles = StyleSheet.create({
   card: {
-    maxHeight:327,
-    width:'100%',
+    maxHeight:192,
+    minWidth:327,
     backgroundColor: "#fff",
     borderRadius: 16,
     padding: 16,

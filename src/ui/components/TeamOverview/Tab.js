@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 
-const TAB_LIST = ['Live', 'Scorecard', 'Commentary', 'Statistics', 'Over']
+const TAB_LIST = ['Home', 'Match & Results', 'Squads', 'Stats', 'ScoreCard']
 
 const Tab = ({ tabs = TAB_LIST, onTabChange }) => {
-  const [selected, setSelected] = useState(0) // Default to 'Live' tab
+  const [selected, setSelected] = useState(0)
 
   const handlePress = (idx) => {
     setSelected(idx)

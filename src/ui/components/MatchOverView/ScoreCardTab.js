@@ -49,12 +49,12 @@ const ScorecardTab = () => {
       </View>
 
       <View style={styles.tableHeader}>
-        <Text style={[styles.cell, { flex: 3 }]}>Batting</Text>
-        <Text style={styles.cell}>R</Text>
-        <Text style={styles.cell}>B</Text>
-        <Text style={styles.cell}>4s</Text>
-        <Text style={styles.cell}>6s</Text>
-        <Text style={styles.cell}>SR</Text>
+        <Text style={[styles.headerCell, { flex: 3 }]}>Batting</Text>
+        <Text style={styles.headerCell}>R</Text>
+        <Text style={styles.headerCell}>B</Text>
+        <Text style={styles.headerCell}>4s</Text>
+        <Text style={styles.headerCell}>6s</Text>
+        <Text style={styles.headerCell}>SR</Text>
       </View>
 
       {battingData.map((item, index) => (
@@ -73,8 +73,10 @@ const ScorecardTab = () => {
 
       <View style={styles.extrasRow}>
         <Text style={styles.playerName}>Extras</Text>
-        <Text style={styles.dismissal}>(lb 1, nb 5)</Text>
+        {/* <Text>(lb 1, nb 5)</Text> */}
+        <Text style={[styles.cell, {textAlign:'center'}]}>(lb 1, nb 5)</Text>
         <Text style={[styles.cell, { fontWeight: '600' }]}>6</Text>
+
       </View>
 
       <View style={styles.totalRow}>
@@ -83,6 +85,10 @@ const ScorecardTab = () => {
         <Text style={styles.totalScore}>136</Text>
       </View>
       <BowlingCard/>
+         <View style={[styles.header,{marginTop:18,borderRadius:8}]}>
+        <Text style={styles.teamText}>Close Of Play </Text>
+        <Text style={styles.subText}>Tue, 31 Jan - day 1 - Eng Lions 1st innings 249/3 (Tom Haines 62*, Josh Bohannon 26*, 48 ov)</Text>
+      </View>
     </View>
   );
 };
@@ -92,13 +98,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 16,
-    
   },
   header: {
     backgroundColor: '#eee',
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom:8
   },
   teamText: {
@@ -114,9 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#eee',
     paddingVertical: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
+    borderRadius: 12,
   },
   row: {
     flexDirection: 'row',
@@ -130,6 +133,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
+  headerCell: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
+  },
   playerName: {
     fontWeight: '600',
     fontSize: 14,
@@ -140,18 +150,18 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   extrasRow: {
+    display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 12,
-    borderTopWidth: 1,
     paddingTop: 8,
-    borderColor: '#000',
   },
   totalRow: {
     marginTop: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTopWidth: 2,
+    borderTopWidth: 0.2,
     paddingTop: 10,
     borderColor: '#000',
   },

@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../ui/screens/Home';
 import Matches from '../ui/screens/Matches';
 import MatchOverview from '../ui/screens/MatchOverview';
+import TeamOverview from '../ui/screens/TeamOverview';
 // Create navigator
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MatchOverview"
+        initialRouteName="TeamOverview"
         screenOptions={{
           headerStyle: {
             backgroundColor: '#fff',
@@ -47,6 +48,14 @@ const Navigation = () => {
         component={MatchOverview}
         options={{
           title: 'Match Overview',
+          headerShown: false,
+        }}
+        />
+             <Stack.Screen
+        name="TeamOverview"
+        component={TeamOverview}
+        options={{
+          title: 'Team Overview',
           headerShown: false,
         }}
         />

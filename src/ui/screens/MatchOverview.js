@@ -5,6 +5,9 @@ import OverViewCard from '../components/MatchOverView/OverViewCard';
 import Tab from '../components/MatchOverView/Tab';
 import ScoreCard from '../components/MatchOverView/LiveTab';
 import ScorecardTab from '../components/MatchOverView/ScoreCardTab';
+import CommentryTab from '../components/MatchOverView/CommentryTab';
+import StatisticsTab from '../components/MatchOverView/StatisticsTab';
+import OverTab from '../components/MatchOverView/OverTab';
 
 const matchData = {
   subtitle: "1st unofficial Test, Galle, January 31 – February 03, 2023, England Lions tour of Sri Lanka",
@@ -15,9 +18,26 @@ const matchData = {
   last10ov: "68/2 (6.80)",
   dayInfo: "Day 2 - Eng Lions lead by 169 runs."
 };
+const overData = {
+  team: 'England Lions',
+  tags: ['Impactful Overs', 'Dropped catch', 'DRS'],
+  prevOver: '2/0 (4 runs, 0 wkt)',
+  runRate: '4.00',
+  overStats: '4/0',
+  totalInfo: '16 runs, 1 wkt',
+  bowler: 'Dunith Wellalage',
+  balls: [
+    { value: 'dot' },
+    { value: 'w' },
+    { value: '4' },
+    { value: 3 },
+    { value: 3 },
+    { value: '6' },
+  ],
+};
 
 const MatchOverview = ({ navigation }) => {
-  const [selectedTab, setSelectedTab] = useState(0); // Default to 'Live' tab
+  const [selectedTab, setSelectedTab] = useState(0); 
 
   const handleTabChange = (index) => {
     setSelectedTab(index);
@@ -31,6 +51,9 @@ const MatchOverview = ({ navigation }) => {
         <Tab onTabChange={handleTabChange} />
         {selectedTab === 0 && <ScoreCard />}
         {selectedTab === 1 && <ScorecardTab/>}
+        {selectedTab === 2 && <CommentryTab/>}
+        {selectedTab === 3 && <StatisticsTab/>}
+        {selectedTab === 4 && <OverTab data={overData}/>}
       </ScrollView>
     </View>
   )
