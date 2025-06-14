@@ -7,6 +7,9 @@ import Home from '../ui/screens/Home';
 import Matches from '../ui/screens/Matches';
 import MatchOverview from '../ui/screens/MatchOverview';
 import TeamOverview from '../ui/screens/TeamOverview';
+import CricketNewsCard from '../ui/components/TeamOverview/News';
+import Highlights from '../ui/components/TeamOverview/Highlights';
+import TeamRankingScreen from '../ui/screens/TeamRankingScreen';
 // Create navigator
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +18,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TeamOverview"
+        initialRouteName="TeamRanking"
         screenOptions={{
           headerStyle: {
             backgroundColor: '#fff',
@@ -56,6 +59,30 @@ const Navigation = () => {
         component={TeamOverview}
         options={{
           title: 'Team Overview',
+          headerShown: false,
+        }}
+        />
+        <Stack.Screen
+        name="News"
+        component={CricketNewsCard}
+        options={{
+          title: 'Team Overview',
+          headerShown: false,
+        }}
+        />
+        <Stack.Screen
+        name="Highlights"
+        component={Highlights}
+        options={{
+          title: 'Highlights',
+          headerShown: false,
+        }}
+        />
+        <Stack.Screen
+        name="TeamRanking"
+        component={TeamRankingScreen}
+        options={{
+          title: 'TeamRanking',
           headerShown: false,
         }}
         />

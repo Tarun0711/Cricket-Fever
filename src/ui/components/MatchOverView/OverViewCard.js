@@ -4,6 +4,18 @@ import React from 'react';
 const OverViewCard = ({ data }) => {
   if (!data) return null;
 
+  // Get team names from the data object
+  const getTeamNames = () => {
+    const teams = Object.keys(data).filter(key => 
+      typeof data[key] === 'object' && 
+      data[key].flag && 
+      data[key].score
+    );
+    return teams;
+  };
+
+  const teams = getTeamNames();
+
   return (
     <View style={styles.shadowWrapper}>
       <View style={styles.card}>
@@ -13,34 +25,39 @@ const OverViewCard = ({ data }) => {
             style={styles.batsIcon}
           />
           <View style={styles.headerText}>
-            <Text style={styles.liveBadge}>LIVE</Text>
+            {data.isLive ? (
+              <Text style={styles.liveBadge}>LIVE</Text>
+            ) : (
+              <View style={{display:'flex',alignItems:'center',gap:8,flexDirection:'row'}}>
+                <Text style={styles.resultText}>RESULT</Text>
+                <Text style={{fontSize:11}}>{data.matchdate}</Text>
+              </View>
+            )}
             <Text style={styles.subtitle}>{data.subtitle}</Text>
           </View>
         </View>
 
         <View style={styles.teams}>
-          <View style={styles.teamsRow}>
-            <View style={styles.teamRow}>
-              <Image source={data.india.flag} style={styles.flagImg} />
-              <Text style={styles.teamName}>India</Text>
+          {teams.map((teamKey, index) => (
+            <View key={index} style={styles.teamsRow}>
+              <View style={styles.teamRow}>
+                <Image source={data[teamKey].flag} style={styles.flagImg} />
+                <Text style={styles.teamName}>
+                  {teamKey.charAt(0).toUpperCase() + teamKey.slice(1)}
+                </Text>
+              </View>
+              <Text style={styles.score}>{data[teamKey].score}</Text>
             </View>
-            <Text style={styles.score}>{data.india.score}</Text>
-          </View>
-
-          <View style={styles.teamsRow}>
-            <View style={styles.teamRow}>
-              <Image source={data.england.flag} style={styles.flagImg} />
-              <Text style={styles.teamName}>England</Text>
-            </View>
-            <Text style={styles.score}>{data.england.score}</Text>
-          </View>
+          ))}
         </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.info}>
-            <Text style={styles.bold}>Current RR:</Text> {data.currentRR} • Min. Ov. Rem: {data.minOvRem} • Last 10 ov (RR): {data.last10ov}
-          </Text>
-        </View>
+        {data.currentRR && (
+          <View style={styles.infoBox}>
+            <Text style={styles.info}>
+              <Text style={styles.bold}>Current RR:</Text> {data.currentRR} • Min. Ov. Rem: {data.minOvRem} • Last 10 ov (RR): {data.last10ov}
+            </Text>
+          </View>
+        )}
 
         <Text style={styles.dayInfo}>{data.dayInfo}</Text>
       </View>
@@ -52,20 +69,15 @@ export default OverViewCard;
 
 const styles = StyleSheet.create({
   shadowWrapper: {
-    // marginHorizontal: 16,
-    // marginTop: 16,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-
-    // iOS Shadow
     shadowColor: '#091C13',
-    shadowOffset: { width: 0, height: 4 }, // only bottom
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.8,
     shadowRadius: 60,
-
-    // Android Shadow
-    elevation: 10, // simulate depth
+    elevation: 10,
     backgroundColor: 'transparent',
+    marginBottom: 16,
   },
   card: {
     backgroundColor: 'white',
@@ -96,6 +108,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 4,
     fontSize: 12,
+  },
+  resultText: {
+    color: '#666',
+    fontSize: 12,
+    fontWeight: '600',
+    paddingHorizontal: 8,
+    marginBottom: 4,
+    padding: 2,
+    borderRadius: 4,
+    backgroundColor: '#F5F5F5'
   },
   subtitle: {
     color: '#888',

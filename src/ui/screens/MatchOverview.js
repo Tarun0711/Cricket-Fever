@@ -16,7 +16,8 @@ const matchData = {
   currentRR: "5.40",
   minOvRem: "77.4",
   last10ov: "68/2 (6.80)",
-  dayInfo: "Day 2 - Eng Lions lead by 169 runs."
+  dayInfo: "Day 2 - Eng Lions lead by 169 runs.",
+  isLive: true
 };
 const overData = {
   team: 'England Lions',
