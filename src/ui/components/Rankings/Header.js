@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Header({ onFilterPress }) {
+export default function Header({Name, onFilterPress }) {
   return (
     <View style={styles.header}>
       <Ionicons name="chevron-back" size={24} color="black" />
-      <Text style={styles.title}>Team Rankings</Text>
+      <Text style={styles.title}>{Name}</Text>
       <Ionicons name="options" size={22} color="black" onPress={onFilterPress} />
     </View>
   );

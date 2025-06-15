@@ -1,10 +1,19 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
-const TeamTopNavigation = ({ navigation ,title}) => {
+
+const TeamTopNavigation = ({ navigation, title, onBackPress }) => {
+  const handleBackPress = () => {
+    if (onBackPress) {
+      onBackPress();
+    } else if (navigation) {
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
         <Ionicons name="chevron-back-outline" size={24} color="black" />
       </TouchableOpacity>
       <Text style={styles.title}>

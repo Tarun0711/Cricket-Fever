@@ -11,6 +11,8 @@ import CricketNewsCard from '../ui/components/TeamOverview/News';
 import Highlights from '../ui/components/TeamOverview/Highlights';
 import TeamRankingScreen from '../ui/screens/TeamRankingScreen';
 import Ranking from '../ui/screens/Ranking';
+import Players from '../ui/screens/Players'
+import PlayerSelection from '../ui/screens/PlayerSelection';
 // Create navigator
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +21,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Ranking"
+        initialRouteName="PlayerSelection"
         screenOptions={{
           headerStyle: {
             backgroundColor: '#fff',
@@ -92,6 +94,22 @@ const Navigation = () => {
         component={Ranking}
         options={{
           title: 'Ranking',
+          headerShown: false,
+        }}
+        />
+        <Stack.Screen
+        name="Players"
+        component={Players}
+        options={{
+          title: 'Players',
+          headerShown: false,
+        }}
+        />
+        <Stack.Screen
+        name="PlayerSelection"
+        component={PlayerSelection}
+        options={{
+          title: 'PlayerSelection',
           headerShown: false,
         }}
         />

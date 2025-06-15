@@ -23,7 +23,7 @@ export default function TeamRankingScreen() {
 
   return (
     <View style={styles.container}>
-      <Header onFilterPress={() => setFilterVisible(true)} />
+      <Header Name='Team Rankings' onFilterPress={() => setFilterVisible(true)} />
       <TabSelector />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <RankingHeader/>
