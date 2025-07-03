@@ -6,29 +6,45 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2466BB"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.wicketfever"
+      "bundleIdentifier": "com.anonymous.wicketfever",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio", "fetch"]
+      }
     },
     "android": {
+      "package": "com.anonymous.wicketfever",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#2466BB"
       },
-      "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.wicketfever"
+      "permissions": [],
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.anonymous.wicketfever",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
+      },
+      "softwareKeyboardLayoutMode": "pan",
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-video"
-    ]
+    "plugins": ["expo-video"]
   }
 }

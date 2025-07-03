@@ -6,8 +6,11 @@ import UpcomingMatches from '../components/Home/UpcomingMatches'
 import MatchStories from '../components/Home/MatchStories'
 import LatestResult from '../components/Home/LatestResult'
 import FeturedVideos from '../components/Home/FeturedVideos'
+import { useUpcomingMatches } from '../../hooks/useUpcomingMatches'
 
 const Home = () => {
+  const { data, isLoading, error } = useUpcomingMatches();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>

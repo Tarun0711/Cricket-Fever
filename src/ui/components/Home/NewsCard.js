@@ -1,19 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { getCricketNews } from '../../../services/apiCalls/newsApi';
 
 const CricketCard = () => {
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const newsData = await getCricketNews();
+        setNews(newsData.articles);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://img1.hscicdn.com/image/upload/f_auto/lsci/db/PICTURES/CMS/347900/347950.3.jpg' }}
+        source={{ uri: news[0].urlToImage }}
         style={styles.image}
         resizeMode="cover"
       />
       <View style={styles.captionContainer}>
         <BlurView intensity={50} tint="dark" style={styles.blurContainer}>
           <Text style={styles.caption}>
-            Bangladesh are behind on their World Cup -
+            {news[0].title}
           </Text>
         </BlurView>
       </View>

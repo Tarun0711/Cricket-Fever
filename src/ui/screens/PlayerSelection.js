@@ -63,7 +63,7 @@ const topRankedPlayers = [
       points: 3690,
       rating: 115,
     },
-  ];
+];
 
 const PlayerSelection = ({ navigation }) => {
   const [selectedPlayers, setSelectedPlayers] = useState([null, null]);
@@ -136,9 +136,7 @@ const PlayerSelection = ({ navigation }) => {
               )}
             </View>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>
-                {selectedPlayers[index] ? selectedPlayers[index].playerName : `Select Player ${index + 1}`}
-              </Text>
+              <Text style={styles.label}>Select Player {index + 1}</Text>
             </View>
           </TouchableOpacity>
         ))}

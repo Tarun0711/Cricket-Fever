@@ -1,32 +1,7 @@
 import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView } from 'react-native'
 import React, { useRef, useState, useEffect } from 'react'
 import MatchCard from '../Home/MatchCard';
-
-const newsData = [{
-  image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000',
-  category: 'News',
-  title: "Yasir Arafat on Mickey Arthur's radar to be Pakistan's new bowling coach",
-  date: 'Dec 5, 2022',
-  time: '5:30 min',
-},{
-  image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000',
-  category: 'Match Report',
-  title: "India clinches thrilling victory against Australia in T20 series opener",
-  date: 'Dec 6, 2022',
-  time: '4:15 min',
-},{
-  image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000',
-  category: 'Analysis',
-  title: "Breaking down England's new batting strategy in ODI cricket",
-  date: 'Dec 7, 2022',
-  time: '6:20 min',
-},{
-  image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000',
-  category: 'Transfer News',
-  title: "Major IPL auction updates: Teams reveal their strategies",
-  date: 'Dec 8, 2022',
-  time: '3:45 min',
-}]
+import { getCricketNews } from '../../../services/apiCalls/newsApi';
 
 const matches = [
   {
@@ -69,8 +44,21 @@ const windowWidth = Dimensions.get('window').width;
 const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
+  const [news, setNews] = useState([]);
 
-  const onViewRef = useRef(({ viewableItems }) => {
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const newsData = await getCricketNews();
+        setNews(newsData.articles);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+
+    fetchNews();
+  }, []); 
+   const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setActiveIndex(viewableItems[0].index);
     }
@@ -133,15 +121,14 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.newsList}
       >
-        {newsData.map((item, index) => (
+        {news.map((item, index) => (
           <View key={index} style={styles.newsCard}>
-            <Image source={{ uri: item.image }} style={styles.newsImage} />
+            <Image source={{ uri: item.urlToImage }} style={styles.newsImage} />
             <View style={styles.newsContent}>
-              <Text style={styles.newsCategory}>{item.category}</Text>
+              <Text style={styles.newsCategory}>{item.source.name}</Text>
               <Text style={styles.newsTitle}>{item.title}</Text>
               <View style={styles.newsMeta}>
-                <Text style={styles.newsDate}>{item.date}</Text>
-                <Text style={styles.newsTime}>{item.time}</Text>
+                <Text style={styles.newsDate}>{item.publishedAt}</Text>
               </View>
             </View>
           </View>
