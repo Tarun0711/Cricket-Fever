@@ -5,7 +5,6 @@ import { SvgXml } from 'react-native-svg';
 
   
 const MatchCard = ({data}) => {
-  // console.log("MatchCard data:", data);
   if (!data) {
     return (
       <View style={styles.card}>

@@ -1,5 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { formatUnixTimestamp } from '../../../utils/TimeFormat';
+import { SvgXml } from 'react-native-svg';
 
 const MatchCard = ({ match }) => {
   return (
@@ -11,20 +13,23 @@ const MatchCard = ({ match }) => {
           resizeMode="contain"
         />
       </View>
-      <Text style={styles.header}> {match.time}</Text>
+      <Text style={styles.header}> {match.start_at ? formatUnixTimestamp(match.start_at) : "-"}</Text>
       <View style={styles.teamsRow}>
         <View style={styles.team}>
-          <Text style={styles.teamName}>{match.teams.home}</Text>
-          <Image source={{ uri: match.flags.home }} style={styles.flag} />
+          <Text style={styles.teamName}>{match.teams?.a.code || "-"}</Text>
+           <SvgXml xml={match.teams.a.flag} style={styles.flag}/> 
+
         </View>
         <Text style={styles.vs}>Vs</Text>
         <View style={styles.team}>
-          <Image source={{ uri: match.flags.away }} style={styles.flag} />
-          <Text style={styles.teamName}>{match.teams.away}</Text>
+        <SvgXml xml={match.teams.b.flag} style={styles.flag}/> 
+
+          <Text style={styles.teamName}>{match.teams?.b.code || "-"}</Text>
         </View>
       </View>
-      <Text style={styles.status}>{match.status}</Text>
-      <Text style={styles.venue}>{match.venue}</Text>
+      <Text style={styles.status}>
+  {match?.status === 'not_started' ? 'Match Yet To Begin' : '-'}
+</Text>      <Text style={styles.venue}>{match.venue.name || "-"}</Text>
     </View>
   );
 };

@@ -3,37 +3,18 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { getCricketNews } from '../../../services/apiCalls/newsApi';
 
-const CricketCard = () => {
-  const [news, setNews] = useState([]);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const newsData = await getCricketNews();
-        setNews(newsData.articles || []);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-      }
-    };
-
-    fetchNews();
-  }, []);
-
-  if (!news.length || !news[0]?.urlToImage || !news[0]?.title) {
-    return null; // or return a loading placeholder
-  }
-
+const CricketCard = ({news}) => {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: news[0].urlToImage }}
+        source={{ uri: news?.coverImageBase64 }}
         style={styles.image}
         resizeMode="cover"
       />
       <View style={styles.captionContainer}>
         <BlurView intensity={50} tint="dark" style={styles.blurContainer}>
           <Text style={styles.caption}>
-            {news[0].title}
+            {news?.hline}
           </Text>
         </BlurView>
       </View>

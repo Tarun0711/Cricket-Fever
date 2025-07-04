@@ -9,7 +9,6 @@ import FeturedVideos from '../components/Home/FeturedVideos'
 import { useUpcomingMatches } from '../../hooks/useUpcomingMatches'
 import {useCompletedMatches} from '../../hooks/useCompletedMatches'
 const Home = () => {
-  const { data, isLoading, error } = useUpcomingMatches();
   const { data: completedMatches, isLoading: completedMatchesLoading, error: completedMatchesError } = useCompletedMatches();
   return (
     <SafeAreaView style={styles.container}>
@@ -18,7 +17,7 @@ const Home = () => {
           <Header />
           <HorizontalCardList />
           <View style={styles.mainComponent}>
-            <UpcomingMatches data={data} isLoading={isLoading} error={error}/>
+            <UpcomingMatches/>
             <MatchStories/>
             <LatestResult data={completedMatches} isLoading={completedMatchesLoading} error={completedMatchesError} />
             <FeturedVideos/>

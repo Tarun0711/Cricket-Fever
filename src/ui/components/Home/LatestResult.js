@@ -12,21 +12,7 @@ const extractTournamentChips = (data) => {
     title: match?.tournament?.name || 'Unknown Tournament'
   }));
 };
-const data1 = {
-    title: 'SCOTLAND VS BANGLADESH',
-    subtitle: "MEN'S T20 TRI-Series East London",
-    team1: {
-      code: 'SCO',
-      flag: 'https://flagcdn.com/w320/gb-sct.png',
-      score: '120/5',
-    },
-    team2: {
-      code: 'BAN',
-      flag: 'https://flagcdn.com/w320/bd.png',
-      scoreDetails: '(18.5/20 ov, T:120) 122/4',
-    },
-    result: 'Bangladesh won by 6 wickets',
-  };
+
 
   
 

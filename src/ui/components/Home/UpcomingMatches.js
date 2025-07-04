@@ -5,6 +5,7 @@ import MatchCardList from './UpcomingFlatlist'
 
 const UpcomingMatches = () => {
   const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -13,7 +14,7 @@ const UpcomingMatches = () => {
               <Text style={styles.showMore}>Show more</Text>
             </TouchableOpacity>
         </View>
-      <MatchCardList/>
+      <MatchCardList />
     </View>
   )
 }
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
       color:'white',
       fontSize:20,
       lineHeight:25,
-      fontWeight:700,
+      fontWeight:'700',
   },
   showMore: {
       fontSize: 15,

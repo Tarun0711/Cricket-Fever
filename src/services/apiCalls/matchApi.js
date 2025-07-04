@@ -2,7 +2,20 @@ import axiosClient from '../api';
 
 export const getUpcomingMatches = async () => {
   const response = await axiosClient.get('/matches/upcoming');
-  return JSON.stringify(response.data);
+  let data = response.data;
+
+  if (typeof data === 'string') {
+    try {
+      data = JSON.parse(data); 
+      if (typeof data === 'string') {
+        data = JSON.parse(data);
+      }
+    } catch (error) {
+      console.error('Error parsing response data:', error);
+    }
+  }
+
+  return data;
 };
 
 export const getMatchDetails = async (matchId) => {
