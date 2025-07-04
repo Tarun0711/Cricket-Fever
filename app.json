@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#2466BB"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD"
@@ -24,7 +26,10 @@
       "bundleIdentifier": "com.anonymous.wicketfever",
       "buildNumber": "1.0.0",
       "infoPlist": {
-        "UIBackgroundModes": ["audio", "fetch"]
+        "UIBackgroundModes": [
+          "audio",
+          "fetch"
+        ]
       }
     },
     "android": {
@@ -45,6 +50,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-video"]
+    "plugins": [
+      "expo-video"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9fc0bbfb-7aaf-4c70-bb07-6371db9d113a"
+      }
+    }
   }
 }
