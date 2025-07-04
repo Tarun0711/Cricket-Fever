@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import MatchCard from './ResultCard'
+import { useNavigation } from '@react-navigation/native';
 
-const chipsData = [
-    { id: '1', title: 'T20 WC Pts Table' },
-    { id: '2', title: 'ODI WC Pts Table' },
-    { id: '3', title: 'PCL Score' },
-    { id: '4', title: 'IPL Score' },
-    { id: '5', title: 'Test Series' },
-    { id: '6', title: 'County Championship' }
-]
-const data = {
+const extractTournamentChips = (data) => {
+  if (!data?.matches || !Array.isArray(data.matches) || data.matches.length === 0) {
+    return [{ id: '0', title: 'No Matches Available' }];
+  }
+  return data.matches.map((match, index) => ({
+    id: (index + 1).toString(),
+    title: match?.tournament?.name || 'Unknown Tournament'
+  }));
+};
+const data1 = {
     title: 'SCOTLAND VS BANGLADESH',
     subtitle: "MEN'S T20 TRI-Series East London",
     team1: {
@@ -26,7 +28,17 @@ const data = {
     result: 'Bangladesh won by 6 wickets',
   };
 
-const LatestResult = () => {
+  
+
+const LatestResult = ({ data, isLoading, error }) => {
+  const navigation = useNavigation();
+
+  // Improved logging for debugging
+  // console.log('LatestResult data:', JSON.stringify(data, null, 2));
+  const chipsData = extractTournamentChips(data?.data); 
+  const firstMatch = data?.data?.matches?.[0];
+  // console.log('First match:', JSON.stringify(firstMatch, null, 2));
+
   const renderChip = ({ item }) => (
     <TouchableOpacity style={styles.chip}>
       <Text style={styles.chipText}>{item.title}</Text>
@@ -37,8 +49,9 @@ const LatestResult = () => {
     <View style={styles.container}>
         <View style={styles.headerContainer}>
             <Text style={styles.title}>Latest Results</Text>
-            <Text style={styles.showMore}>Show more</Text>
-        </View>
+            <TouchableOpacity onPress={() => navigation.navigate('Matches')}>
+              <Text style={styles.showMore}>Show more</Text>
+            </TouchableOpacity>        </View>
         <FlatList
             data={chipsData}
             renderItem={renderChip}
@@ -48,7 +61,8 @@ const LatestResult = () => {
             style={styles.chipsList}
             contentContainerStyle={styles.chipsContainer}
         />
-        <MatchCard data={data}/>
+
+        <MatchCard data={firstMatch}/>
     </View>
   )
 }

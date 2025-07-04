@@ -7,10 +7,10 @@ import MatchStories from '../components/Home/MatchStories'
 import LatestResult from '../components/Home/LatestResult'
 import FeturedVideos from '../components/Home/FeturedVideos'
 import { useUpcomingMatches } from '../../hooks/useUpcomingMatches'
-
+import {useCompletedMatches} from '../../hooks/useCompletedMatches'
 const Home = () => {
   const { data, isLoading, error } = useUpcomingMatches();
-
+  const { data: completedMatches, isLoading: completedMatchesLoading, error: completedMatchesError } = useCompletedMatches();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -18,9 +18,9 @@ const Home = () => {
           <Header />
           <HorizontalCardList />
           <View style={styles.mainComponent}>
-            <UpcomingMatches/>
+            <UpcomingMatches data={data} isLoading={isLoading} error={error}/>
             <MatchStories/>
-            <LatestResult/>
+            <LatestResult data={completedMatches} isLoading={completedMatchesLoading} error={completedMatchesError} />
             <FeturedVideos/>
           </View>
         </View>

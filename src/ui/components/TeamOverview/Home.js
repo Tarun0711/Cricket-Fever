@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView } from 
 import React, { useRef, useState, useEffect } from 'react'
 import MatchCard from '../Home/MatchCard';
 import { getCricketNews } from '../../../services/apiCalls/newsApi';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const matches = [
   {
@@ -42,6 +44,7 @@ const matches = [
 const windowWidth = Dimensions.get('window').width;
 
 const Home = () => {
+  const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
   const [news, setNews] = useState([]);
@@ -57,8 +60,8 @@ const Home = () => {
     };
 
     fetchNews();
-  }, []); 
-   const onViewRef = useRef(({ viewableItems }) => {
+  }, []);
+  const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setActiveIndex(viewableItems[0].index);
     }
@@ -95,7 +98,7 @@ const Home = () => {
           viewabilityConfig={viewConfigRef.current}
           snapToInterval={windowWidth}
           decelerationRate="fast"
-          style={{borderRadius:30}}
+          style={{ borderRadius: 30 }}
           getItemLayout={(data, index) => ({
             length: windowWidth,
             offset: windowWidth * index,
@@ -117,13 +120,29 @@ const Home = () => {
       </View>
 
       <Text style={[styles.heading, { marginTop: 24 }]}>Latest News</Text>
-      <ScrollView 
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.newsList}
       >
         {news.map((item, index) => (
-          <View key={index} style={styles.newsCard}>
-            <Image source={{ uri: item.urlToImage }} style={styles.newsImage} />
+   <TouchableOpacity
+   key={index}
+   style={styles.newsCard}
+   onPress={() => navigation.navigate('News', { news: item })}
+ >
+            <Image
+              source={{
+                uri: item.urlToImage && item.urlToImage.trim() !== ''
+                  ? item.urlToImage
+                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScN1B_T6ONRC2ZuOX9hESM_DYAz7VDHsOXI-rF60altHq5qhc1RriQk0X3Q6rD0U4w7gQ&usqp=CAU'
+              }}
+              defaultSource={{
+                uri: item.urlToImage && item.urlToImage.trim() !== ''
+                  ? item.urlToImage
+                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScN1B_T6ONRC2ZuOX9hESM_DYAz7VDHsOXI-rF60altHq5qhc1RriQk0X3Q6rD0U4w7gQ&usqp=CAU'
+              }}
+              style={styles.newsImage}
+            />
             <View style={styles.newsContent}>
               <Text style={styles.newsCategory}>{item.source.name}</Text>
               <Text style={styles.newsTitle}>{item.title}</Text>
@@ -131,7 +150,7 @@ const Home = () => {
                 <Text style={styles.newsDate}>{item.publishedAt}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
@@ -149,7 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
     lineHeight: 25,
-    width:'100%',
+    width: '100%',
     marginVertical: 16,
   },
   dotsContainer: {
@@ -167,18 +186,18 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     backgroundColor: '#222',
-    height:10,
-    width:10,
-    borderRadius:10,
+    height: 10,
+    width: 10,
+    borderRadius: 10,
   },
   inactiveDot: {
     backgroundColor: '#D3D3D3',
   },
-  shadowWrraper:{
+  shadowWrraper: {
     backgroundColor: 'white',
     borderRadius: 30,
     width: '100%',
-    marginHorizontal:-16,
+    marginHorizontal: -16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

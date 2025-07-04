@@ -10,7 +10,7 @@ const CricketCard = () => {
     const fetchNews = async () => {
       try {
         const newsData = await getCricketNews();
-        setNews(newsData.articles);
+        setNews(newsData.articles || []);
       } catch (error) {
         console.error('Error fetching news:', error);
       }
@@ -18,6 +18,10 @@ const CricketCard = () => {
 
     fetchNews();
   }, []);
+
+  if (!news.length || !news[0]?.urlToImage || !news[0]?.title) {
+    return null; // or return a loading placeholder
+  }
 
   return (
     <View style={styles.container}>
@@ -44,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     margin: 6,
-    marginTop:24,
+    marginTop: 24,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 3 },

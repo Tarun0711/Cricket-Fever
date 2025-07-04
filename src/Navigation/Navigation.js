@@ -21,7 +21,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TeamOverview"
+        initialRouteName="Home"
         screenOptions={{
           headerStyle: {
             backgroundColor: '#fff',

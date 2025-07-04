@@ -1,45 +1,69 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 
 
   
 const MatchCard = ({data}) => {
+  // console.log("MatchCard data:", data);
+  if (!data) {
+    return (
+      <View style={styles.card}>
+        <Text>No match data available.</Text>
+      </View>
+    );
+  }
+  // Fallbacks for missing data
+  const tournamentShortName = data.tournament?.short_name || 'Unknown Short Name';
+  const tournamentName = data.tournament?.name || 'Unknown Tournament';
+  const teamAFlag = data.teams?.a?.flag || '';
+  const teamACode = data.teams?.a?.country_code || 'N/A';
+  const teamAScore = data.play?.innings?.a_1?.score?.runs || '-';
+  const teamBFlag = data.teams?.b?.flag || '';
+  const teamBCode = data.teams?.b?.country_code || 'N/A';
+  const teamBScore = data.play?.innings?.b_1?.score?.runs || '-';
+  const teamBScoreDetails = data.play?.innings?.b_1?.score_str || '';
+  const resultMsg = data?.play?.result?.msg || '';
+  const teamAScoreDetails = data.play?.innings?.a_1?.score_str || '';
   return (
     <View style={styles.card}>
-        <View style={{display:'flex',flexDirection:'row',gap:16,justifyContent:'flex-start',alignItems:'center'}}>
-            <Image
-            source={require('../../../../assets/bats.png')}
-            style={{height:16,width:16}}
-            />
-            <View>
-            <Text style={styles.header}> {data.title}</Text>
-            <Text style={styles.subHeader}>{data.subtitle}</Text>
-            </View>
+      <View style={{display:'flex',flexDirection:'row',gap:16,justifyContent:'flex-start',alignItems:'center'}}>
+        <Image
+          source={require('../../../../assets/bats.png')}
+          style={{height:16,width:16}}
+        />
+        <View>
+          <Text style={styles.header}>{tournamentShortName}</Text>
+          <Text style={styles.subHeader}>{tournamentName}</Text>
         </View>
-      
+      </View>
 
       {/* Team 1 */}
       <View style={styles.scoreSection}>
         <View style={styles.team}>
-          <Image source={{ uri: data.team1.flag }} style={styles.flag} />
-          <Text style={styles.teamCode}>{data.team1.code}</Text>
+          {teamAFlag ? <SvgXml xml={teamAFlag} style={styles.flag}/> : null}
+          <Text style={styles.teamCode}>{teamACode}</Text>
         </View>
-        <Text style={styles.score}>{data.team1.score}</Text>
+        
+        <View style={styles.scoreContainer}>
+            <Text style={styles.scoreDetails}>{teamAScoreDetails} </Text>
+          <Text style={styles.score}>{teamAScore}</Text>
+        </View>
       </View>
 
       {/* Team 2 */}
       <View style={styles.scoreSection}>
         <View style={styles.team}>
-          <Image source={{ uri: data.team2.flag }} style={styles.flag} />
-          <Text style={styles.teamCode}>{data.team2.code}</Text>
+          {teamBFlag ? <SvgXml xml={teamBFlag} style={styles.flag}/> : null}
+          <Text style={styles.teamCode}>{teamBCode}</Text>
         </View>
         <View style={styles.scoreContainer}>
-          <Text style={styles.scoreDetails}>{data.team2.scoreDetails.split(')')[0]}) </Text>
-          <Text style={styles.score}>{data.team2.scoreDetails.split(') ')[1]}</Text>
+            <Text style={styles.scoreDetails}>{teamBScoreDetails} </Text>
+          <Text style={styles.score}>{teamBScore}</Text>
         </View>
       </View>
 
-      <Text style={styles.result}>{data.result}</Text>
+      {resultMsg ? <Text style={styles.result}>{resultMsg}</Text> : null}
     </View>
   );
 };
@@ -78,6 +102,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
+    objectFit:"cover",
     marginRight: 12,
   },
   teamCode: {
