@@ -1,94 +1,91 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { useGetScoreCard } from '../../../hooks/useGetScoreCard';
 import BowlingCard from './BowlingCard';
 
-const battingData = [
-  {
-    name: 'Nishan Madushka',
-    dismissal: 'lbw b Fisher',
-    runs: 32,
-    balls: 3,
-    fours: 2,
-    sixes: 1,
-    sr: 30.86,
-  },
-  {
-    name: 'Oshada Fernando',
-    dismissal: 'c Haines b Patterson-W',
-    runs: 26,
-    balls: 3,
-    fours: 2,
-    sixes: 1,
-    sr: 30.86,
-  },
-  {
-    name: 'Dunith Wellalage',
-    dismissal: 'c †Smith b Abell',
-    runs: 12,
-    balls: 3,
-    fours: 2,
-    sixes: 1,
-    sr: 30.86,
-  },
-  {
-    name: 'Sahan Arachchige',
-    dismissal: 'c †Smith b Fisher',
-    runs: 45,
-    balls: 3,
-    fours: 2,
-    sixes: 1,
-    sr: 30.86,
-  }
-];
+const ScorecardTab = ({ matchId }) => {
+  const { data, isLoading, error } = useGetScoreCard(matchId);
 
-const ScorecardTab = () => {
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+        <ActivityIndicator size="large" color="#1B6FDE" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+        <Text style={{ color: 'red' }}>Failed to load scorecard.</Text>
+      </View>
+    );
+  }
+
+  if (!data.data || !data.data.innings || data.data.innings.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+        <Text>No scorecard data available.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.teamText}>Sri Lanka A <Text style={styles.subText}>1st Innings</Text></Text>
-      </View>
-
-      <View style={styles.tableHeader}>
-        <Text style={[styles.headerCell, { flex: 3 }]}>Batting</Text>
-        <Text style={styles.headerCell}>R</Text>
-        <Text style={styles.headerCell}>B</Text>
-        <Text style={styles.headerCell}>4s</Text>
-        <Text style={styles.headerCell}>6s</Text>
-        <Text style={styles.headerCell}>SR</Text>
-      </View>
-
-      {battingData.map((item, index) => (
-        <View key={index} style={styles.row}>
-          <View style={{ flex: 3 }}>
-            <Text style={styles.playerName}>{item.name}</Text>
-            <Text style={styles.dismissal}>{item.dismissal}</Text>
+      {data.data.innings.map((inning, idx) => (
+        <View key={idx} style={{ marginBottom: 24 }}>
+          <View style={styles.header}>
+            <Text style={styles.teamText}>{inning.team} <Text style={styles.subText}>{inning.inning_name || ''}</Text></Text>
           </View>
-          <Text style={styles.cell}>{item.runs}</Text>
-          <Text style={styles.cell}>{item.balls}</Text>
-          <Text style={styles.cell}>{item.fours}</Text>
-          <Text style={styles.cell}>{item.sixes}</Text>
-          <Text style={styles.cell}>{item.sr}</Text>
+
+          <View style={styles.tableHeader}>
+            <Text style={[styles.headerCell, { flex: 3 }]}>Batting</Text>
+            <Text style={styles.headerCell}>R</Text>
+            <Text style={styles.headerCell}>B</Text>
+            <Text style={styles.headerCell}>4s</Text>
+            <Text style={styles.headerCell}>6s</Text>
+            <Text style={styles.headerCell}>SR</Text>
+          </View>
+
+          {inning.batting && inning.batting.length > 0 ? (
+            inning.batting.map((item, index) => (
+              <View key={index} style={styles.row}>
+                <View style={{ flex: 3 }}>
+                  <Text style={styles.playerName}>{item.name}</Text>
+                  <Text style={styles.dismissal}>{item.dismissal}</Text>
+                </View>
+                <Text style={styles.cell}>{item.runs}</Text>
+                <Text style={styles.cell}>{item.balls}</Text>
+                <Text style={styles.cell}>{item.fours}</Text>
+                <Text style={styles.cell}>{item.sixes}</Text>
+                <Text style={styles.cell}>{item.strike_rate}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={{ textAlign: 'center', color: '#888', marginVertical: 8 }}>No batting data</Text>
+          )}
+
+          {/* Extras */}
+          {typeof inning.extras !== 'undefined' && (
+            <View style={styles.extrasRow}>
+              <Text style={styles.playerName}>Extras</Text>
+              <Text style={[styles.cell, { textAlign: 'center' }]}>b {inning.bye || 0}, lb {inning.leg_bye || 0}, w {inning.wide || 0}, nb {inning.no_ball || 0}</Text>
+              <Text style={[styles.cell, { fontWeight: '600' }]}>{inning.extras}</Text>
+            </View>
+          )}
+
+          {/* Total */}
+          <View style={styles.totalRow}>
+            <Text style={styles.totalText}>TOTAL</Text>
+            <Text style={styles.totalStat}>{inning.total_overs} Ov (RR: {inning.run_rate})</Text>
+            <Text style={styles.totalScore}>{inning.total_runs}</Text>
+          </View>
+
+          {/* BowlingCard can be refactored to accept data if needed */}
+          <BowlingCard bowlingData={inning.bowling} />
         </View>
       ))}
-
-      <View style={styles.extrasRow}>
-        <Text style={styles.playerName}>Extras</Text>
-        {/* <Text>(lb 1, nb 5)</Text> */}
-        <Text style={[styles.cell, {textAlign:'center'}]}>(lb 1, nb 5)</Text>
-        <Text style={[styles.cell, { fontWeight: '600' }]}>6</Text>
-
-      </View>
-
-      <View style={styles.totalRow}>
-        <Text style={styles.totalText}>TOTAL</Text>
-        <Text style={styles.totalStat}>35.4 Ov (RR: 3.81)</Text>
-        <Text style={styles.totalScore}>136</Text>
-      </View>
-      <BowlingCard/>
-         <View style={[styles.header,{marginTop:18,borderRadius:8}]}>
-        <Text style={styles.teamText}>Close Of Play </Text>
-        <Text style={styles.subText}>Tue, 31 Jan - day 1 - Eng Lions 1st innings 249/3 (Tom Haines 62*, Josh Bohannon 26*, 48 ov)</Text>
-      </View>
+      {/* Optionally render match summary/close of play info here if available in data */}
     </View>
   );
 };
@@ -104,7 +101,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 16,
-    marginBottom:8
+    marginBottom: 8,
   },
   teamText: {
     fontWeight: '700',

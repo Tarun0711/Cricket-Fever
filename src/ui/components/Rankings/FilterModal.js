@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -9,8 +9,20 @@ const options = [
   'Date',
 ];
 
-export default function FilterModal({ visible, onClose }) {
-  const [selected, setSelected] = useState('Bowling');
+export default function FilterModal({ visible, onClose, category, setCategory, gender, setGender }) {
+  const [selectedCategory, setSelectedCategory] = useState(category || 'batsmen');
+  const [selectedGender, setSelectedGender] = useState(gender || 'women');
+
+  useEffect(() => {
+    setSelectedCategory(category);
+    setSelectedGender(gender);
+  }, [category, gender, visible]);
+
+  const handleApply = () => {
+    setCategory(selectedCategory);
+    setGender(selectedGender);
+    onClose();
+  };
 
   return (
     <Modal
@@ -27,20 +39,43 @@ export default function FilterModal({ visible, onClose }) {
             <Ionicons name="close-circle" size={28} color="#C4C4C4" />
           </TouchableOpacity>
         </View>
-        {options.map((option) => (
+        <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Category</Text>
+        <View style={{ flexDirection: 'row', marginBottom: 16 }}>
           <TouchableOpacity
-            key={option}
-            style={[styles.option, selected === option && styles.selectedOption]}
-            onPress={() => setSelected(option)}
-            activeOpacity={0.7}
+            style={[styles.option, selectedCategory === 'batsmen' && styles.selectedOption]}
+            onPress={() => setSelectedCategory('batsmen')}
           >
-            <Text style={styles.optionText}>{option}</Text>
-            <View style={styles.radioOuter}>
-              {selected === option && <View style={styles.radioInner} />}
-            </View>
+            <Text style={styles.optionText}>Batting</Text>
           </TouchableOpacity>
-        ))}
-        <TouchableOpacity style={styles.applyButton} onPress={onClose}>
+          <TouchableOpacity
+            style={[styles.option, selectedCategory === 'bowlers' && styles.selectedOption]}
+            onPress={() => setSelectedCategory('bowlers')}
+          >
+            <Text style={styles.optionText}>Bowling</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.option, selectedCategory === 'all-rounder' && styles.selectedOption]}
+            onPress={() => setSelectedCategory('all-rounder')}
+          >
+            <Text style={styles.optionText}>All Rounder</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={{ fontWeight: 'bold', marginBottom: 8 }}>Gender</Text>
+        <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+          <TouchableOpacity
+            style={[styles.option, selectedGender === 'man' && styles.selectedOption]}
+            onPress={() => setSelectedGender('men')}
+          >
+            <Text style={styles.optionText}>Men</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.option, selectedGender === 'women' && styles.selectedOption]}
+            onPress={() => setSelectedGender('women')}
+          >
+            <Text style={styles.optionText}>Women</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
           <Text style={styles.applyText}>Apply</Text>
         </TouchableOpacity>
       </View>

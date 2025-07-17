@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Header({Name, onFilterPress }) {
+export default function Header({ Name, onFilterPress, category, gender, format }) {
   return (
     <View style={styles.header}>
       <Ionicons name="chevron-back" size={24} color="black" />

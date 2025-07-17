@@ -76,8 +76,20 @@ const radiusInner = size * 0.25;
               opacity={0.8}
             />
           )}
+
+          {/* Center text for largest count */}
+          <SvgText
+            x={center}
+            y={center - 2}
+            fontSize={14}
+            fontWeight="400"
+            fill="#fff"
+            textAnchor="middle"
+            alignmentBaseline="middle"
+          >
+            {largest.count > 0 ? `${largest.count} ${largest.score}${largest.count > 1 ? '' : ''}` : 'No Data'}
+          </SvgText>
         </G>
-          
       </Svg>
     </View>
   );

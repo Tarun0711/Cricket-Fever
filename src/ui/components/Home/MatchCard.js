@@ -1,11 +1,13 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { formatUnixTimestamp } from '../../../utils/TimeFormat';
 import { SvgXml } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 
 const MatchCard = ({ match }) => {
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} activeOpacity={0.85} >
       <View style={styles.svgContainer}>
         <Image 
           source={require('../../../../assets/bats.png')}
@@ -30,7 +32,7 @@ const MatchCard = ({ match }) => {
       <Text style={styles.status}>
   {match?.status === 'not_started' ? 'Match Yet To Begin' : '-'}
 </Text>      <Text style={styles.venue}>{match.venue.name || "-"}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -1,20 +1,30 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { SvgXml } from 'react-native-svg';
+import { getCountryFlag } from '../../../services/apiCalls/matchApi';
+import { formatUnixTimestamp } from '../../../utils/TimeFormat';
 
-const OverViewCard = ({ data }) => {
-  if (!data) return null;
+const OverViewCard = ({ data1 }) => {
+  const [teamAFlag, setTeamAFlag] = useState(null);
+  const [teamBFlag, setTeamBFlag] = useState(null);
 
-  // Get team names from the data object
-  const getTeamNames = () => {
-    const teams = Object.keys(data).filter(key => 
-      typeof data[key] === 'object' && 
-      data[key].flag && 
-      data[key].score
-    );
-    return teams;
-  };
-
-  const teams = getTeamNames();
+  useEffect(() => {
+    const fetchFlags = async () => {
+      try {
+        if (data1?.teams?.a?.country_code) {
+          const flagA = await getCountryFlag(data1.teams.a.country_code);
+          setTeamAFlag(flagA?.svg || flagA);
+        }
+        if (data1?.teams?.b?.country_code) {
+          const flagB = await getCountryFlag(data1.teams.b.country_code);
+          setTeamBFlag(flagB?.svg || flagB);
+        }
+      } catch (error) {
+        console.error('Error fetching country flags:', error);
+      }
+    };
+    fetchFlags();
+  }, [data1]);
 
   return (
     <View style={styles.shadowWrapper}>
@@ -25,41 +35,77 @@ const OverViewCard = ({ data }) => {
             style={styles.batsIcon}
           />
           <View style={styles.headerText}>
-            {data.isLive ? (
-              <Text style={styles.liveBadge}>LIVE</Text>
-            ) : (
-              <View style={{display:'flex',alignItems:'center',gap:8,flexDirection:'row'}}>
+            {data1.status ==='completed' ? (
+                <View style={{display:'flex',alignItems:'center',gap:8,flexDirection:'row'}}>
                 <Text style={styles.resultText}>RESULT</Text>
-                <Text style={{fontSize:11}}>{data.matchdate}</Text>
               </View>
+            ) : (
+              <Text style={styles.liveBadge}>LIVE</Text>
             )}
-            <Text style={styles.subtitle}>{data.subtitle}</Text>
+            <Text style={styles.subtitle}>{data1.tournament.name + ', ' + formatUnixTimestamp(data1.start_at) + ',' + data1.format +','+data1.name}</Text>
           </View>
         </View>
 
         <View style={styles.teams}>
-          {teams.map((teamKey, index) => (
-            <View key={index} style={styles.teamsRow}>
-              <View style={styles.teamRow}>
-                <Image source={data[teamKey].flag} style={styles.flagImg} />
-                <Text style={styles.teamName}>
-                  {teamKey.charAt(0).toUpperCase() + teamKey.slice(1)}
-                </Text>
-              </View>
-              <Text style={styles.score}>{data[teamKey].score}</Text>
+          <View style={styles.teamsRow}>
+            <View style={styles.teamRow}>
+              {teamAFlag ? (
+                <SvgXml xml={teamAFlag} style={styles.flagImg} />
+              ) : (
+                <View style={[styles.flagImg, {backgroundColor: '#eee'}]} />
+              )}
+              <Text style={styles.teamName}>
+                {data1.teams.a.name}
+              </Text>
             </View>
-          ))}
-        </View>
-
-        {data.currentRR && (
-          <View style={styles.infoBox}>
-            <Text style={styles.info}>
-              <Text style={styles.bold}>Current RR:</Text> {data.currentRR} • Min. Ov. Rem: {data.minOvRem} • Last 10 ov (RR): {data.last10ov}
+            <Text style={styles.score}>
+              {data1?.current_innings?.batting_team === 'a'
+                ? data1?.current_innings?.score_str
+                : (typeof data1?.current_innings?.score?.runs === 'number' ? (data1.current_innings.score.runs - 1).toString() : '-')}
             </Text>
           </View>
+          <View style={styles.teamsRow}>
+            <View style={styles.teamRow}>
+              {teamBFlag ? (
+                <SvgXml xml={teamBFlag} style={styles.flagImg} />
+              ) : (
+                <View style={[styles.flagImg, {backgroundColor: '#eee'}]} />
+              )}
+              <Text style={styles.teamName}>
+                {data1.teams.b.name}
+              </Text>
+            </View>
+            <Text style={styles.score}>
+              {data1?.current_innings?.batting_team === 'b'
+                ? data1?.current_innings?.score_str
+                : (typeof data1?.current_innings?.score?.runs === 'number' ? (data1.current_innings.score.runs - 1).toString() : '-')}
+            </Text>
+          </View>
+        </View>
+
+        {data1.status === 'live' ? (
+          data1.currentRR && (
+            <View style={styles.infoBox}>
+              <Text style={styles.info}>
+                <Text style={styles.bold}>Current RR:</Text> {data1.currentRR} • Min. Ov. Rem: {data1.minOvRem} • Last 10 ov (RR): {data1.last10ov}
+              </Text>
+            </View>
+          )
+        ) : (
+          data1.toss && (
+            <View style={styles.infoBox}>
+              <Text style={styles.info}>
+                {`${data1.teams[data1.toss.winner].name} won the toss and elected to ${data1.toss.elected}`}
+              </Text>
+            </View>
+          )
         )}
 
-        <Text style={styles.dayInfo}>{data.dayInfo}</Text>
+        <Text style={styles.dayInfo}>
+          {data1.result && data1.result.winner && data1.result.result_type && data1.result.win_by
+            ? `${data1.teams[data1.result.winner].name} won by ${data1.result.win_by} ${data1.result.result_type}`
+            : data1.result?.msg}
+        </Text>
       </View>
     </View>
   );

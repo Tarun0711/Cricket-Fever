@@ -1,42 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const bowlingData = [
-  {
-    name: 'Nishan Madushka',
-    o: '7',
-    m: 3,
-    r: 2,
-    w: 1,
-    econ: 4.86,
-  },
-  {
-    name: 'Oshada Fernando',
-    o: '9.4',
-    m: 0,
-    r: 2,
-    w: 3,
-    econ: 3.86,
-  },
-  {
-    name: 'Dunith Wellalage',
-    o: '13',
-    m: 2,
-    r: 2,
-    w: 5,
-    econ: 1.86,
-  },
-  {
-    name: 'Sahan Arachchige',
-    o: '5',
-    m: 6,
-    r: 2,
-    w: 2,
-    econ: 2.86,
-  },
-];
-
-const BowlingCard = () => {
+const BowlingCard = ({ bowlingData }) => {
+  if (!bowlingData || bowlingData.length === 0) {
+    return <Text style={{ color: '#888', marginVertical: 8, textAlign: 'center' }}>No bowling data</Text>;
+  }
   return (
     <View style={styles.container}>
       <View style={styles.tableHeader}>
@@ -51,11 +19,11 @@ const BowlingCard = () => {
       {bowlingData.map((item, index) => (
         <View key={index} style={styles.row}>
           <Text style={[styles.playerName, { flex: 3 }]}>{item.name}</Text>
-          <Text style={styles.cell}>{item.o}</Text>
-          <Text style={styles.cell}>{item.m}</Text>
-          <Text style={styles.cell}>{item.r}</Text>
-          <Text style={styles.cell}>{item.w}</Text>
-          <Text style={styles.cell}>{item.econ}</Text>
+          <Text style={styles.cell}>{item.overs}</Text>
+          <Text style={styles.cell}>{item.maidens}</Text>
+          <Text style={styles.cell}>{item.runs}</Text>
+          <Text style={styles.cell}>{item.wickets}</Text>
+          <Text style={styles.cell}>{item.economy}</Text>
         </View>
       ))}
     </View>

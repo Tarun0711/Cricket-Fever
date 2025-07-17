@@ -3,7 +3,7 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderCard from '../components/Rankings/HeaderCard';
 import TeamRankingCard from '../components/Rankings/TeamRankingCard';
-
+import {useGetTeamRanking} from '../../hooks/useGetTeamRanking'
 const newsData = [{
     image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000',
     category: 'News',
@@ -50,6 +50,11 @@ const data=[
 ]
 
 const Ranking = () => {
+  const { data: teamRankingsODI } = useGetTeamRanking({ format: 'odi', gender: 'men' });
+  const { data: teamRankingsT20 } = useGetTeamRanking({ format: 't20', gender: 'men' });
+  const { data: teamRankingTest } = useGetTeamRanking({ format: 'test', gender: 'men' });
+
+
   return (
     <View style={styles.container}>
         <View style={styles.Header}>
@@ -82,7 +87,11 @@ const Ranking = () => {
         <Text style={styles.Title}>
             Top Rankings
           </Text>
-          <TeamRankingCard/>
+          <TeamRankingCard
+  odi={teamRankingsODI.data.rankings.find(team => team.name === "India")}
+  t20={teamRankingsT20.data.rankings.find(team => team.name === "India")}
+  test={teamRankingTest.data.rankings.find(team => team.name === "India")}
+/>
           <Text style={styles.Title2}>
         Ranking News
           </Text>

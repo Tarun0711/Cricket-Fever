@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function TabSelector() {
-  const [activeTab, setActiveTab] = useState('Test');
-
-  const tabs = ['Test', 'ODI', 'T20I'];
+export default function TabSelector({ activeTab, onTabChange, gender }) {
+  const tabs = gender === 'women' ? ['Test', 'ODI'] : ['Test', 'ODI', 'T20I'];
 
   return (
     <View style={styles.tabs}>
@@ -12,7 +10,7 @@ export default function TabSelector() {
         <TouchableOpacity
           key={tab}
           style={activeTab === tab ? styles.activeTab : styles.inactiveTab}
-          onPress={() => setActiveTab(tab)}
+          onPress={() => onTabChange(tab)}
         >
           <Text style={activeTab === tab ? styles.activeTabText : styles.inactiveTabText}>
             {tab}

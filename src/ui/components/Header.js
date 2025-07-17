@@ -12,7 +12,7 @@ const Header = () => {
       {/* Top Row */}
       <View style={styles.topRow}>
         <View style={styles.userInfo}>
-          <Image
+          {/* <Image
             style={styles.avatar}
             source={{
               uri: 'https://super.abril.com.br/wp-content/uploads/2018/07/566ee0ae82bee174ca0300dahomer-simpson.jpeg?crop=1&resize=1212,909',
@@ -21,7 +21,7 @@ const Header = () => {
           <View style={styles.userText}>
             <Text style={styles.name}>Homar Simpson</Text>
             <Text style={styles.username}>@homarsimpson</Text>
-          </View>
+          </View> */}
         </View>
 
         <TouchableOpacity style={styles.notification}>

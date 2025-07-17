@@ -1,45 +1,10 @@
-import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useRef, useState, useEffect } from 'react'
 import MatchCard from '../Home/MatchCard';
 import { getCricketNews } from '../../../services/apiCalls/newsApi';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-const matches = [
-  {
-    id: 1,
-    teams: { home: "SA", away: "ENG" },
-    flags: {
-      home: "https://flagcdn.com/w320/za.png",
-      away: "https://flagcdn.com/w320/gb.png",
-    },
-    time: "Tomorrow • 5:00 PM • 3rd ODI",
-    status: "Match yet to begin",
-    venue: "Kimberley International Stadium",
-  },
-  {
-    id: 2,
-    teams: { home: "IND", away: "AUS" },
-    flags: {
-      home: "https://flagcdn.com/w320/in.png",
-      away: "https://flagcdn.com/w320/au.png",
-    },
-    time: "Today • 7:00 PM • 1st T20",
-    status: "Match yet to begin",
-    venue: "Wankhede Stadium",
-  },
-  {
-    id: 3,
-    teams: { home: "SA", away: "ENG" },
-    flags: {
-      home: "https://flagcdn.com/w320/za.png",
-      away: "https://flagcdn.com/w320/gb.png",
-    },
-    time: "Tomorrow • 5:00 PM • 3rd ODI",
-    status: "Match yet to begin",
-    venue: "Kimberley International Stadium",
-  },
-];
+import { useUpcomingMatchesByCountry } from '../../../hooks/useUpcomingMatchesByCountry';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -48,12 +13,13 @@ const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
   const [news, setNews] = useState([]);
-
+  const { data, isLoading, error } = useUpcomingMatchesByCountry('BGD');
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const newsData = await getCricketNews();
-        setNews(newsData.articles);
+        setNews(newsData?.newsList);
+        console.log(news)
       } catch (error) {
         console.error('Error fetching news:', error);
       }
@@ -69,91 +35,100 @@ const Home = () => {
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
   useEffect(() => {
+    const matchesLength = data?.data?.matches?.length || 0;
+    if (matchesLength === 0) return;
+
     const interval = setInterval(() => {
       let nextIndex = activeIndex + 1;
-      if (nextIndex >= matches.length) nextIndex = 0;
+      if (nextIndex >= matchesLength) nextIndex = 0;
       flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
       setActiveIndex(nextIndex);
     }, 3000);
     return () => clearInterval(interval);
-  }, [activeIndex]);
+  }, [activeIndex, data]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Upcoming Matches</Text>
-      <View style={styles.shadowWrraper}>
-        <FlatList
-          ref={flatListRef}
-          data={matches}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={{ width: windowWidth }}>
-              <MatchCard match={item} />
-            </View>
-          )}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onViewableItemsChanged={onViewRef.current}
-          viewabilityConfig={viewConfigRef.current}
-          snapToInterval={windowWidth}
-          decelerationRate="fast"
-          style={{ borderRadius: 30 }}
-          getItemLayout={(data, index) => ({
-            length: windowWidth,
-            offset: windowWidth * index,
-            index,
-          })}
-          contentContainerStyle={{}}
-        />
+    isLoading ? (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#222" />
       </View>
-      <View style={styles.dotsContainer}>
-        {matches.map((_, idx) => (
-          <View
-            key={idx}
-            style={[
-              styles.dot,
-              activeIndex === idx ? styles.activeDot : styles.inactiveDot,
-            ]}
-          />
-        ))}
-      </View>
-
-      <Text style={[styles.heading, { marginTop: 24 }]}>Latest News</Text>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.newsList}
-      >
-        {news.map((item, index) => (
-   <TouchableOpacity
-   key={index}
-   style={styles.newsCard}
-   onPress={() => navigation.navigate('News', { news: item })}
- >
-            <Image
-              source={{
-                uri: item.urlToImage && item.urlToImage.trim() !== ''
-                  ? item.urlToImage
-                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScN1B_T6ONRC2ZuOX9hESM_DYAz7VDHsOXI-rF60altHq5qhc1RriQk0X3Q6rD0U4w7gQ&usqp=CAU'
-              }}
-              defaultSource={{
-                uri: item.urlToImage && item.urlToImage.trim() !== ''
-                  ? item.urlToImage
-                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScN1B_T6ONRC2ZuOX9hESM_DYAz7VDHsOXI-rF60altHq5qhc1RriQk0X3Q6rD0U4w7gQ&usqp=CAU'
-              }}
-              style={styles.newsImage}
-            />
-            <View style={styles.newsContent}>
-              <Text style={styles.newsCategory}>{item.source.name}</Text>
-              <Text style={styles.newsTitle}>{item.title}</Text>
-              <View style={styles.newsMeta}>
-                <Text style={styles.newsDate}>{item.publishedAt}</Text>
+    ) : (
+      <View style={styles.container}>
+        <Text style={styles.heading}>Upcoming Matches</Text>
+        <View style={styles.shadowWrraper}>
+          <FlatList
+            ref={flatListRef}
+            data={data?.data?.matches || []}
+            keyExtractor={(item, index) => index}
+            renderItem={({ item }) => (
+              <View style={{ width: windowWidth }}>
+                <MatchCard match={item} />
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+            )}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onViewableItemsChanged={onViewRef.current}
+            viewabilityConfig={viewConfigRef.current}
+            snapToInterval={windowWidth}
+            decelerationRate="fast"
+            style={{ borderRadius: 30 }}
+            getItemLayout={(data, index) => ({
+              length: windowWidth,
+              offset: windowWidth * index,
+              index,
+            })}
+            contentContainerStyle={{}}
+          />
+        </View>
+        <View style={styles.dotsContainer}>
+          {data?.data?.matches?.map((item, idx) => (
+            <View
+              key={item.key.toString()}
+              style={[
+                styles.dot,
+                activeIndex === idx ? styles.activeDot : styles.inactiveDot,
+              ]}
+            />
+          ))}
+        </View>
+
+        <Text style={[styles.heading, { marginTop: 24 }]}>Latest News</Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.newsList}
+        >
+          {news.map((item, index) => (
+     <TouchableOpacity
+     key={index}
+     style={styles.newsCard}
+     onPress={() => navigation.navigate('News', { news: item })}
+   >
+                <Image
+                  source={{
+                    uri: item.urlToImage && item.urlToImage.trim() !== ''
+                      ? item.urlToImage
+                      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScN1B_T6ONRC2ZuOX9hESM_DYAz7VDHsOXI-rF60altHq5qhc1RriQk0X3Q6rD0U4w7gQ&usqp=CAU'
+                  }}
+                  defaultSource={{
+                    uri: item.urlToImage && item.urlToImage.trim() !== ''
+                      ? item.urlToImage
+                      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScN1B_T6ONRC2ZuOX9hESM_DYAz7VDHsOXI-rF60altHq5qhc1RriQk0X3Q6rD0U4w7gQ&usqp=CAU'
+                  }}
+                  style={styles.newsImage}
+                />
+                <View style={styles.newsContent}>
+                  <Text style={styles.newsCategory}>{item.source.name}</Text>
+                  <Text style={styles.newsTitle}>{item.title}</Text>
+                  <View style={styles.newsMeta}>
+                    <Text style={styles.newsDate}>{item.publishedAt}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+        </ScrollView>
+      </View>
+    )
   )
 }
 
@@ -163,6 +138,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   heading: {
     fontSize: 17,

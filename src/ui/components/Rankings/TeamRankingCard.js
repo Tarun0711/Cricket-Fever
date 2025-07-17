@@ -2,26 +2,26 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import RankBox from './RankBox';
 
-const TeamRankingCard = () => {
+const TeamRankingCard = ({ test,odi,t20 }) => {
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Image
-          source={{ uri: 'https://flagcdn.com/w80/nz.png' }}
+          source={t20.displayImg ? { uri: t20.displayImg } : require('../../../../assets/bats.png')}
           style={styles.logo}
         />
         <View style={styles.titleContainer}>
-          <Text style={styles.countryText}>New Zealand <Text style={styles.boldText}>Rankings</Text></Text>
+          <Text style={styles.countryText}>{t20.name} <Text style={styles.boldText}>Rankings</Text></Text>
           <Text style={styles.subTitle}>Top Team</Text>
         </View>
       </View>
 
       {/* Rank Boxes */}
       <View style={styles.rankContainer}>
-        <RankBox type="ODI" rank="3rd" rating="111" color="#24B4E3" />
-        <RankBox type="TEST" rank="5th" rating="99" color="#00E19D" />
-        <RankBox type="T20I" rank="5th" rating="252" color="#D81F7C" />
+        <RankBox type="ODI" rank={odi.rank} rating={odi.rating} color="#24B4E3" />
+        <RankBox type="TEST" rank={test.rank} rating={test.rating} color="#1DE9B6" />
+        <RankBox type="T20I" rank={t20.rank} rating={t20.rating} color="#F0437B" />
       </View>
     </View>
   );

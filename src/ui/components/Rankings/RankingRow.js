@@ -15,18 +15,45 @@ export function RankingHeader() {
   );
 }
 
-export default function RankingRow({ pos, team, flag, wms, pts, rating }) {
+export default function RankingRow({ team }) {
   return (
     
     <View style={styles.row}>
-      <Text style={styles.pos}>{pos}</Text>
+      <Text style={styles.pos}>{team.rank}</Text>
       <View style={styles.team}>
-        <Image source={{ uri: flag }} style={styles.flag} />
-        <Text style={styles.teamText}>{team}</Text>
+        <Image source={{ uri: team.displayImg }} style={styles.flag} />
+        <Text style={styles.teamText}>{team.name}</Text>
       </View>
-      <Text style={styles.cell}>{wms}</Text>
-      <Text style={styles.cell}>{pts}</Text>
-      <Text style={styles.rating}>{rating}</Text>
+      <Text style={styles.cell}>{team.matches}</Text>
+      <Text style={styles.cell}>{team.points}</Text>
+      <Text style={styles.rating}>{team.rating}</Text>
+    </View>
+  );
+}
+
+export function PlayerRankingHeader() {
+  return (
+    <View style={[styles.row, styles.header]}>
+      <Text style={[styles.pos, styles.headerText]}>Pos</Text>
+      <View style={styles.playerCell}>
+        <Text style={[styles.teamText, styles.headerText]}>Player</Text>
+      </View>
+      <Text style={[styles.cell, styles.headerText]}>PTS</Text>
+      <Text style={[styles.rating, styles.headerText]}>Rating</Text>
+    </View>
+  );
+}
+
+export function PlayerRankingRow({ player }) {
+  return (
+    <View style={styles.row}>
+      <Text style={styles.pos}>{player.rank}</Text>
+      <View style={styles.playerCell}>
+        <Image source={{ uri: player.displayImg }} style={styles.flag} />
+        <Text style={styles.teamText}>{player.name}</Text>
+      </View>
+      <Text style={styles.cell}>{player.points}</Text>
+      <Text style={styles.rating}>{player.rating}</Text>
     </View>
   );
 }
@@ -60,4 +87,5 @@ const styles = StyleSheet.create({
   teamText: { fontWeight: '700', fontSize: 13, color: '#222' },
   cell: { flex: 2, textAlign: 'center', fontSize: 13, color: '#222' },
   rating: { flex: 2, fontWeight: 'bold', fontSize: 13, color: '#111', textAlign: 'right' },
+  playerCell: { flex: 3, marginRight: 20, flexDirection: 'row', alignItems: 'center' },
 });

@@ -5,12 +5,17 @@ const CricketStatsCard = ({ data = {} }) => {
 
   // Safely extract and parse values
   const name = data?.name || 'Unknown Player';
-  const team = data?.team || '';
-  const avatar = data?.avatar || 'https://via.placeholder.com/48';
-  const runs = parseInt(data?.runs) || 0;
-  const balls = parseInt(data?.balls) || 0;
-  const control = parseFloat(data?.control) || 0;
-  
+  const team = data?.team_name || '';
+  const avatar = data?.avatar || 'https://www.shutterstock.com/image-vector/illustration-batsman-playing-cricket-action-600nw-2029010771.jpg';
+  const runs = data?.runs || 0;
+  const balls = data?.balls || 0;
+  const control = data?.control_percentage || 0;
+  const breakdown = {
+    sixes: Number(data?.sixes) || 0,
+    fours: Number(data?.fours) || 0,
+    ones: Number(data?.ones) || 0,
+    twos: Number(data?.twos) || 0,
+  };
 
   return (
     <View style={styles.card}>
@@ -37,8 +42,9 @@ const CricketStatsCard = ({ data = {} }) => {
         <Text style={styles.label}>Average Shot</Text>
       </View>
       </View>
-        <ScorePieChart data={data.breakdown} />
+        <ScorePieChart data={breakdown} />
         </View>
+        <Text style={styles.subText}>Total Runs {runs} sixes {data.sixes} fours {data.fours}</Text>
     </View>
   );
 };
@@ -56,7 +62,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 60,
     elevation: 8,
-  },
+    maxWidth:300
+    },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

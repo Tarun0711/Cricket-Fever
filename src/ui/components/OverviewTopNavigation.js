@@ -1,17 +1,21 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import React from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
-const OverviewTopNavigation = ({ navigation }) => {
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const scaleFont = (size) => (SCREEN_WIDTH / 450) * size;
+const OverviewTopNavigation = ({team, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back-outline" size={24} color="black" />
       </TouchableOpacity>
-      <Text style={styles.title}>
-        <Text style={styles.bold}>India</Text>
-        <Text style={styles.vs}> vs </Text>
-        <Text style={styles.bold}>England</Text>
-      </Text>
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <Text style={styles.title}>
+          <Text style={styles.bold}>{team.a.name}</Text>
+          <Text style={styles.vs}> vs </Text>
+          <Text style={styles.bold}>{team.b.name}</Text>
+        </Text>
+      </View>
     </View>
   )
 }
@@ -47,21 +51,20 @@ const styles = StyleSheet.create({
   },
   title: {
     flexDirection: 'row',
-    fontSize: 20,
+    fontSize: scaleFont(20),
     fontWeight: '700',
     color: '#191919',
     letterSpacing: -1,
     textAlign: 'center',
-    flex: 1,
   },
   bold: {
     fontWeight: '700',
     color: '#191919',
-    fontSize: 20,
+    fontSize: scaleFont(20),
   },
   vs: {
     color: '#A6A6A6',
     fontWeight: '500',
-    fontSize: 16,
+    fontSize: scaleFont(16),
   },
 });

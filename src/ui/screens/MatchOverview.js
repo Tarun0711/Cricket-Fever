@@ -1,5 +1,7 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
+import { useRoute } from '@react-navigation/native';
+import { useGetMatchSummary } from '../../hooks/useGetMatchSummary';
 import OverviewTopNavigation from '../components/OverviewTopNavigation';
 import OverViewCard from '../components/MatchOverView/OverViewCard';
 import Tab from '../components/MatchOverView/Tab';
@@ -9,16 +11,6 @@ import CommentryTab from '../components/MatchOverView/CommentryTab';
 import StatisticsTab from '../components/MatchOverView/StatisticsTab';
 import OverTab from '../components/MatchOverView/OverTab';
 
-const matchData = {
-  subtitle: "1st unofficial Test, Galle, January 31 – February 03, 2023, England Lions tour of Sri Lanka",
-  india: { flag:{uri:'https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png'}, score: "136" },
-  england: { flag: {uri:'https://cdn.britannica.com/25/4825-050-977D8C5E/Flag-United-Kingdom.jpg'}, score: "305/5 (57 ov)" },
-  currentRR: "5.40",
-  minOvRem: "77.4",
-  last10ov: "68/2 (6.80)",
-  dayInfo: "Day 2 - Eng Lions lead by 169 runs.",
-  isLive: true
-};
 const overData = {
   team: 'England Lions',
   tags: ['Impactful Overs', 'Dropped catch', 'DRS'],
@@ -38,22 +30,32 @@ const overData = {
 };
 
 const MatchOverview = ({ navigation }) => {
+  const route = useRoute();
+  const matchKey = route.params?.matchKey;
+  const { data: matchSummary, isLoading, error } = useGetMatchSummary(matchKey);
   const [selectedTab, setSelectedTab] = useState(0); 
-
   const handleTabChange = (index) => {
     setSelectedTab(index);
   };
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#1B6FDE" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <OverviewTopNavigation navigation={navigation} />
+      <OverviewTopNavigation team={matchSummary.data.teams} navigation={navigation} />
       <ScrollView style={styles.contentContainer}>
-        <OverViewCard data={matchData} />
+        <OverViewCard data1={matchSummary.data} />
         <Tab onTabChange={handleTabChange} />
         {selectedTab === 0 && <ScoreCard />}
-        {selectedTab === 1 && <ScorecardTab/>}
-        {selectedTab === 2 && <CommentryTab/>}
-        {selectedTab === 3 && <StatisticsTab/>}
+        {selectedTab === 1 && <ScorecardTab matchId={matchSummary.data.key} />}
+        {selectedTab === 2 && <CommentryTab matchId={matchSummary.data.key}/>}
+        {selectedTab === 3 && <StatisticsTab matchId={matchKey}/>}
         {selectedTab === 4 && <OverTab data={overData}/>}
       </ScrollView>
     </View>

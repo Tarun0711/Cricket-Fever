@@ -1,10 +1,17 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 
   
 const MatchCard = ({data}) => {
+  const navigation = useNavigation();
+  const handlePress = () => {
+    if (data?.key) {
+      navigation.navigate('MatchOverview', { matchKey: data.key });
+    }
+  };
   if (!data) {
     return (
       <View style={styles.card}>
@@ -25,7 +32,7 @@ const MatchCard = ({data}) => {
   const resultMsg = data?.play?.result?.msg || '';
   const teamAScoreDetails = data.play?.innings?.a_1?.score_str || '';
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={handlePress} style={styles.card}>
       <View style={{display:'flex',flexDirection:'row',gap:16,justifyContent:'flex-start',alignItems:'center'}}>
         <Image
           source={require('../../../../assets/bats.png')}
@@ -63,7 +70,7 @@ const MatchCard = ({data}) => {
       </View>
 
       {resultMsg ? <Text style={styles.result}>{resultMsg}</Text> : null}
-    </View>
+    </TouchableOpacity>
   );
 };
 
